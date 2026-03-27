@@ -1,8 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
     
     @Id
@@ -18,8 +20,18 @@ public class Order {
     private Long id;
     
     private String orderNumber;
-    private String status;  // PENDING, PROCESSING, COMPLETED, FAILED
+    
     private BigDecimal amount;
+    
+    private String status;  // PENDING, PROCESSING, COMPLETED, CANCELLED
+    
+    @CreationTimestamp
     private LocalDateTime createdAt;
+    
     private LocalDateTime processedAt;
+    
+    // Quan hệ nhiều-1 với User
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
